@@ -4,10 +4,10 @@ from rest_framework import status
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
-
 model_name = "HooshvareLab/bert-fa-base-uncased-sentiment-digikala"
-tokenizer = AutoTokenizer.from_pretrained(model_name, use_auth_token="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")
-model = AutoModelForSequenceClassification.from_pretrained(model_name, use_auth_token="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")
+tokenizer = AutoTokenizer.from_pretrained(model_name, token="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")
+model = AutoModelForSequenceClassification.from_pretrained(model_name,
+                                                           token="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")
 
 
 class EmotionDetectionAPIView(APIView):
