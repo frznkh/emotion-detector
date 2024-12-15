@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffe6e6;
+            padding: 20px;
+        }
+        h1 { color: #800000; margin-bottom: 20px; }
+        .emotion-box {
+            width: 50%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #800000;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .submit-btn {
+            background-color: #800000;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .submit-btn:hover { background-color: #b30000; }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #800000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>تشخیص احساسات متن فارسی</h1>
+
+<form id="emotion_form">
+    {% csrf_token %}
+    <textarea id="persian_text" class="emotion-box" rows="5" placeholder="اینجا متن خود را وارد کنید"></textarea><br><br>
+    <button type="button" class="submit-btn" onclick="detectEmotion()">تشخیص احساسات</button>
+</form>
+
+<div id="result" class="result"></div>
+
+<script>
+function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
+function detectEmotion() {
+    const text = document.getElementById('persian_text').value;
+    fetch('/detect-emotion/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(),
+        },
+        body: JSON.stringify({ 'persian_text': text }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('result').innerHTML = `<strong>نتیجه:</strong> ${data.result}`;
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+
+</body>
+</html>
